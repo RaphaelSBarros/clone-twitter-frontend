@@ -3,7 +3,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { KeyboardEvent, useState } from 'react'
 
 type Props = {
   placeholder: string
@@ -12,6 +12,7 @@ type Props = {
   icon?: IconDefinition
   value?: string
   onChange?: (newValue: string) => void
+  onEnter?: () => void
 }
 export const Input = ({
   placeholder,
@@ -20,8 +21,15 @@ export const Input = ({
   filled,
   value,
   onChange,
+  onEnter,
 }: Props) => {
   const [showPassword, setShowPassword] = useState(false)
+
+  const handleKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.code.toLowerCase() === 'enter' && onEnter) {
+      onEnter()
+    }
+  }
 
   return (
     <div
@@ -36,6 +44,7 @@ export const Input = ({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange && onChange(e.target.value)}
+        onKeyUp={handleKeyUp}
       />
       {password && (
         <FontAwesomeIcon
